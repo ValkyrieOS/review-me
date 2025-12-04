@@ -1,0 +1,94 @@
+{
+  "comunidades": [
+    {
+      "id": "cataluna",
+      "name": "Cataluña",
+      "slug": "cataluna",
+      "flag": "Flag_of_Catalonia.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la comunidad autónoma de Cataluña.",
+      "transportes": [
+        {
+          "id": "rodalies",
+          "name": "Rodalies de Catalunya",
+          "description": "Servicio de cercanías ferroviarias operado por Renfe que conecta Barcelona con las principales localidades del área metropolitana y comarcas cercanas.",
+          "image": "rodalies.svg",
+          "category": "Tren",
+          "rating": 3,
+          "totalReviews": 1
+        },
+        {
+          "id": "fgc",
+          "name": "Ferrocarrils de la Generalitat (FGC)",
+          "description": "Red ferroviaria autonómica que opera líneas urbanas e interurbanas, incluyendo el cremallera de Montserrat y Vall de Núria.",
+          "image": "ferrocarrils.svg",
+          "category": "Tren",
+          "rating": 4.25,
+          "totalReviews": 1
+        },
+        {
+          "id": "metro-barcelona",
+          "name": "Metro de Barcelona (TMB)",
+          "description": "Sistema de transporte metropolitano subterráneo que conecta Barcelona y su área metropolitana con 12 líneas y más de 180 estaciones.",
+          "image": "renfe.webp",
+          "category": "Metro",
+          "rating": 4,
+          "totalReviews": 1
+        },
+        {
+          "id": "tram",
+          "name": "Tram",
+          "description": "Red de tranvías que conecta diversos municipios del área metropolitana de Barcelona, ofreciendo un transporte sostenible y panorámico.",
+          "image": "tram.svg",
+          "category": "Tranvía",
+          "rating": 3,
+          "totalReviews": 1
+        },
+        {
+          "id": "tus",
+          "name": "TUS (Transports Urbans de Sabadell)",
+          "description": "Sistema de buses de Sabadell, que conecta toda la ciudad con sus principales zonas.",
+          "image": "tus.webp",
+          "category": "Autobús",
+          "rating": 3,
+          "totalReviews": 1
+        }
+      ]
+    },
+    {
+      "id": "madrid",
+      "name": "Madrid",
+      "slug": "madrid",
+      "flag": "Flag_of_Madrid.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad de Madrid.",
+      "comingSoon": true,
+      "transportes": []
+    },
+    {
+      "id": "zaragoza",
+      "name": "Zaragoza",
+      "slug": "zaragoza",
+      "flag": "Flag_of_Zaragoza.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad de Zaragoza.",
+      "comingSoon": true,
+      "transportes": []
+    },
+    {
+      "id": "andalucia",
+      "name": "Andalucía",
+      "slug": "andalucia",
+      "flag": "Flag_of_Andalucía.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad de Andalucía.",
+      "comingSoon": true,
+      "transportes": []
+    },
+    {
+      "id": "valencia",
+      "name": "Valencia",
+      "slug": "valencia",
+      "flag": "Flag_of_Valencia.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad Valenciana.",
+      "comingSoon": true,
+      "transportes": []
+    }
+  ]
+}

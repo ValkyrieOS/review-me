@@ -1,0 +1,30 @@
+{
+  "fgc": [
+    {
+      "id": "s1",
+      "name": "S1",
+      "route": "Barcelona - Terrassa",
+      "rating": 4,
+      "totalReviews": 1,
+      "image": "S1_barcelona.svg"
+    },
+    {
+      "id": "s2",
+      "name": "S2",
+      "route": "Barcelona - Sabadell",
+      "rating": 4.5,
+      "totalReviews": 1,
+      "image": "S2_barcelona.svg"
+    }
+  ],
+  "rodalies": [
+    {
+      "id": "r4",
+      "name": "R4",
+      "route": "Barcelona - Terrassa",
+      "rating": 4,
+      "totalReviews": 1,
+      "image": "R4_barcelona.svg"
+    }
+  ]
+}

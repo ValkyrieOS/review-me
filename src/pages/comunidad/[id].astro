@@ -1,0 +1,195 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TransportCard from "../../components/TransportCard.astro";
+import ratingData from "../../data/rating.json";
+import linesData from "../../data/lines.json";
+
+// Importar todas las imágenes de logos disponibles
+const logoImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/logos/*.{svg,png,webp,jpg}",
+  { eager: true }
+);
+
+// Generar rutas estáticas para todas las comunidades que NO están en "comingSoon"
+export function getStaticPaths() {
+  return ratingData.comunidades
+    .filter((comunidad) => !comunidad.comingSoon)
+    .map((comunidad) => ({
+      params: { id: comunidad.slug },
+      props: { comunidad },
+    }));
+}
+
+// Obtener datos de la comunidad
+const { id } = Astro.params;
+const { comunidad } = Astro.props;
+
+// Si no existe la comunidad, redirigir a 404
+if (!comunidad) {
+  return Astro.redirect("/404");
+}
+
+// Mapear transportes con sus imágenes y líneas
+const transportes = comunidad.transportes.map((transporte: any) => {
+  const imagePath = Object.keys(logoImages).find((path) =>
+    path.includes(transporte.image)
+  );
+
+  // Obtener y mapear líneas si existen
+  const rawLines = (linesData as any)[transporte.id] || [];
+  const lines = rawLines.map((line: any) => {
+    const lineImagePath = Object.keys(logoImages).find((path) =>
+      path.includes(line.image)
+    );
+    return {
+      ...line,
+      imageData: lineImagePath ? logoImages[lineImagePath].default : null,
+    };
+  });
+
+  return {
+    ...transporte,
+    imageData: imagePath ? logoImages[imagePath].default : null,
+    lines: lines,
+  };
+});
+
+// Calcular valoración media
+const averageRating =
+  transportes.length > 0
+    ? transportes.reduce((acc: number, t: any) => acc + t.rating, 0) /
+      transportes.length
+    : 0;
+---
+
+<Layout title={`${comunidad.name} - Transportes | ReviewMe`}>
+  <section class="py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <!-- Breadcrumb -->
+      <nav class="mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm">
+          <li>
+            <a
+              href={import.meta.env.BASE_URL}
+              class="text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              Inicio
+            </a>
+          </li>
+          <li class="text-neutral-600">/</li>
+          <li class="text-neutral-300">{comunidad.name}</li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-12">
+        <h1
+          class="text-3xl md:text-4xl font-bold tracking-tight text-neutral-50"
+        >
+          {comunidad.name}
+        </h1>
+        <p class="mt-3 text-neutral-400 leading-relaxed max-w-2xl">
+          {comunidad.description}
+        </p>
+
+        <!-- Stats -->
+        {
+          transportes.length > 0 && (
+            <div class="mt-6 flex items-center gap-6">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl font-semibold text-neutral-100">
+                  {averageRating.toFixed(1)}
+                </span>
+                <div class="flex gap-0.5">
+                  {Array(Math.round(averageRating))
+                    .fill(null)
+                    .map(() => (
+                      <svg
+                        class="w-4 h-4 text-neutral-300"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                </div>
+                <span class="text-sm text-neutral-500">media</span>
+              </div>
+              <div class="h-4 w-px bg-neutral-800" />
+              <span class="text-sm text-neutral-500">
+                {transportes.length} transportes
+              </span>
+            </div>
+          )
+        }
+      </header>
+
+      <!-- Transport Cards -->
+      <!-- Transport Cards -->
+      {
+        transportes.length > 0 ? (
+          <div class="space-y-12">
+            {Object.entries(
+              transportes.reduce((acc: any, transporte: any) => {
+                const category = transporte.category || "Otros";
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(transporte);
+                return acc;
+              }, {})
+            ).map(([category, items]: [string, any]) => (
+              <div class="space-y-4">
+                <h2 class="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-6 flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-neutral-700" />
+                  {category}
+                </h2>
+
+                <div class="grid gap-4">
+                  {items
+                    .sort((a: any, b: any) => b.rating - a.rating)
+                    .map((transporte: any) => (
+                      <TransportCard
+                        name={transporte.name}
+                        description={transporte.description}
+                        rating={transporte.rating}
+                        imageSrc={transporte.imageData}
+                        totalReviews={transporte.totalReviews}
+                        lines={transporte.lines}
+                      />
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="p-8 border border-dashed border-neutral-800 rounded-xl text-center">
+            <p class="text-neutral-500">
+              No hay transportes registrados para esta comunidad todavía.
+            </p>
+          </div>
+        )
+      }
+
+      <!-- Back link -->
+      <div class="mt-12 pt-8 border-t border-neutral-800">
+        <a
+          href={import.meta.env.BASE_URL}
+          class="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Volver a comunidades
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

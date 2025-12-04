@@ -1,22 +1,56 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import "../styles/global.css";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "ReviewMe - Valoraciones de Transporte",
+  description = "Descubre las valoraciones de los sistemas de transporte público de España",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="antialiased">
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-50 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md"
+      >
+        <nav class="max-w-6xl mx-auto px-6 py-4">
+          <a
+            href="/"
+            class="text-xl font-semibold tracking-tight hover:text-neutral-300 transition-colors"
+          >
+            ReviewMe
+          </a>
+        </nav>
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1">
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-neutral-800 bg-neutral-950">
+        <div class="max-w-6xl mx-auto px-6 py-8">
+          <p class="text-sm text-neutral-500 text-center">
+            © 2024 ReviewMe. Valoraciones de transporte público.
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

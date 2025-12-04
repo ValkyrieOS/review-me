@@ -1,11 +1,57 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import ComunidadCard from "../components/ComunidadCard.astro";
+import ratingData from "../data/rating.json";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Importar todas las banderas disponibles
+const flagImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/logos/Flag_*.svg",
+  { eager: true }
+);
+
+// Mapear comunidades con sus imágenes de bandera
+const comunidades = ratingData.comunidades.map((comunidad) => {
+  const flagPath = Object.keys(flagImages).find((path) =>
+    path.includes(comunidad.flag)
+  );
+  return {
+    ...comunidad,
+    flagImage: flagPath ? flagImages[flagPath].default : null,
+  };
+});
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="ReviewMe - Valoraciones de Transporte Público">
+  <section class="py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1
+          class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-50"
+        >
+          Valoraciones de transporte
+        </h1>
+        <p
+          class="mt-4 text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed"
+        >
+          Selecciona una comunidad autónoma para ver las valoraciones de sus
+          sistemas de transporte público.
+        </p>
+      </div>
+
+      <!-- Comunidades Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          comunidades.map((comunidad) => (
+            <ComunidadCard
+              name={comunidad.name}
+              slug={comunidad.slug}
+              flag={comunidad.flagImage}
+              comingSoon={comunidad.comingSoon || false}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
 </Layout>
