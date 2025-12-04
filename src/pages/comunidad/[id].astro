@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TransportCard from "../../components/TransportCard.astro";
+import { Image } from "astro:assets";
 import ratingData from "../../data/rating.json";
 import linesData from "../../data/lines.json";
 
@@ -54,12 +55,24 @@ const transportes = comunidad.transportes.map((transporte: any) => {
   };
 });
 
-// Calcular valoración media
+// Obtener la imagen de la bandera
+const flagPath = Object.keys(logoImages).find((path) =>
+  path.includes(comunidad.flag)
+);
+const flagImage = flagPath ? logoImages[flagPath].default : null;
+
+// Calcular valoración media (solo transportes con valoraciones)
+const transportesConValoraciones = transportes.filter(
+  (t: any) => t.totalReviews > 0
+);
 const averageRating =
-  transportes.length > 0
-    ? transportes.reduce((acc: number, t: any) => acc + t.rating, 0) /
-      transportes.length
+  transportesConValoraciones.length > 0
+    ? transportesConValoraciones.reduce(
+        (acc: number, t: any) => acc + t.rating,
+        0
+      ) / transportesConValoraciones.length
     : 0;
+const hasAnyReview = transportesConValoraciones.length > 0;
 ---
 
 <Layout title={`${comunidad.name} - Transportes | ReviewMe`}>
@@ -83,11 +96,27 @@ const averageRating =
 
       <!-- Header -->
       <header class="mb-12">
-        <h1
-          class="text-3xl md:text-4xl font-bold tracking-tight text-neutral-50"
-        >
-          {comunidad.name}
-        </h1>
+        <div class="flex items-center gap-4">
+          <!-- Bandera pequeña junto al título -->
+          {
+            flagImage && (
+              <div class="shrink-0 w-10 h-7 rounded overflow-hidden border border-neutral-700/50 shadow-sm">
+                <Image
+                  src={flagImage}
+                  alt={`Bandera de ${comunidad.name}`}
+                  class="w-full h-full object-cover"
+                  width={40}
+                  height={28}
+                />
+              </div>
+            )
+          }
+          <h1
+            class="text-3xl md:text-4xl font-bold tracking-tight text-neutral-50"
+          >
+            {comunidad.name}
+          </h1>
+        </div>
         <p class="mt-3 text-neutral-400 leading-relaxed max-w-2xl">
           {comunidad.description}
         </p>
@@ -96,25 +125,31 @@ const averageRating =
         {
           transportes.length > 0 && (
             <div class="mt-6 flex items-center gap-6">
-              <div class="flex items-center gap-2">
-                <span class="text-2xl font-semibold text-neutral-100">
-                  {averageRating.toFixed(1)}
-                </span>
-                <div class="flex gap-0.5">
-                  {Array(Math.round(averageRating))
-                    .fill(null)
-                    .map(() => (
-                      <svg
-                        class="w-4 h-4 text-neutral-300"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
+              {hasAnyReview ? (
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-semibold text-neutral-100">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  <div class="flex gap-0.5">
+                    {Array(Math.round(averageRating))
+                      .fill(null)
+                      .map(() => (
+                        <svg
+                          class="w-4 h-4 text-neutral-300"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                  </div>
+                  <span class="text-sm text-neutral-500">media</span>
                 </div>
-                <span class="text-sm text-neutral-500">media</span>
-              </div>
+              ) : (
+                <span class="text-sm text-neutral-500 italic">
+                  Sin valoraciones
+                </span>
+              )}
               <div class="h-4 w-px bg-neutral-800" />
               <span class="text-sm text-neutral-500">
                 {transportes.length} transportes

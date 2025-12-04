@@ -14,7 +14,7 @@
           "image": "rodalies.svg",
           "category": "Tren",
           "rating": 3,
-          "totalReviews": 1
+          "totalReviews": 2
         },
         {
           "id": "fgc",
@@ -22,8 +22,8 @@
           "description": "Red ferroviaria autonómica que opera líneas urbanas e interurbanas, incluyendo el cremallera de Montserrat y Vall de Núria.",
           "image": "ferrocarrils.svg",
           "category": "Tren",
-          "rating": 4.25,
-          "totalReviews": 1
+          "rating": 4,
+          "totalReviews": 2
         },
         {
           "id": "metro-barcelona",
@@ -31,8 +31,8 @@
           "description": "Sistema de transporte metropolitano subterráneo que conecta Barcelona y su área metropolitana con 12 líneas y más de 180 estaciones.",
           "image": "renfe.webp",
           "category": "Metro",
-          "rating": 4,
-          "totalReviews": 1
+          "rating": 4.5,
+          "totalReviews": 2
         },
         {
           "id": "tram",
@@ -40,8 +40,8 @@
           "description": "Red de tranvías que conecta diversos municipios del área metropolitana de Barcelona, ofreciendo un transporte sostenible y panorámico.",
           "image": "tram.svg",
           "category": "Tranvía",
-          "rating": 3,
-          "totalReviews": 1
+          "rating": 4,
+          "totalReviews": 2
         },
         {
           "id": "tus",
@@ -49,8 +49,8 @@
           "description": "Red de autobuses urbanos que conecta eficientemente todos los puntos clave de Sabadell, facilitando la movilidad de sus ciudadanos.",
           "image": "tus.webp",
           "category": "Autobús",
-          "rating": 3,
-          "totalReviews": 1
+          "rating": 4,
+          "totalReviews": 2
         },
         {
           "id": "tmesa",
@@ -58,8 +58,17 @@
           "description": "Red de autobuses urbanos que facilita la movilidad dentro de Terrassa, uniendo los barrios con el centro y servicios clave.",
           "image": "tmesa.webp",
           "category": "Autobús",
-          "rating": 4,
-          "totalReviews": 1
+          "rating": 0,
+          "totalReviews": 0
+        },
+        {
+          "id": "TEISA",
+          "name": "TEISA (Transport de Girona)",
+          "description": "La red de autobuses urbanos de Girona, que conecta eficientemente todos los puntos clave de Girona, facilitando la movilidad de sus ciudadanos.",
+          "image": "teisa.webp",
+          "category": "Autobús",
+          "rating": 0,
+          "totalReviews": 0
         }
       ]
     },
