@@ -46,10 +46,19 @@
         {
           "id": "tus",
           "name": "TUS (Transports Urbans de Sabadell)",
-          "description": "Sistema de buses de Sabadell, que conecta toda la ciudad con sus principales zonas.",
+          "description": "Red de autobuses urbanos que conecta eficientemente todos los puntos clave de Sabadell, facilitando la movilidad de sus ciudadanos.",
           "image": "tus.webp",
           "category": "Autobús",
           "rating": 3,
+          "totalReviews": 1
+        },
+        {
+          "id": "tmesa",
+          "name": "TMESA (Transport Urbà de Terrassa)",
+          "description": "Red de autobuses urbanos que facilita la movilidad dentro de Terrassa, uniendo los barrios con el centro y servicios clave.",
+          "image": "tmesa.webp",
+          "category": "Autobús",
+          "rating": 4,
           "totalReviews": 1
         }
       ]
@@ -60,8 +69,26 @@
       "slug": "madrid",
       "flag": "Flag_of_Madrid.svg",
       "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad de Madrid.",
-      "comingSoon": true,
-      "transportes": []
+      "transportes": [
+        {
+          "id": "cercanias",
+          "name": "Cercanías",
+          "description": "Servicio de cercanías ferroviarias operado por Renfe que conecta Madrid con las principales localidades del área metropolitana y comarcas cercanas.",
+          "image": "cercanias.svg",
+          "category": "Tren",
+          "rating": 0,
+          "totalReviews": 0
+        },
+        {
+          "id": "metro",
+          "name": "Metro",
+          "description": "Sistema de transporte metropolitano subterráneo que conecta Madrid y su área metropolitana con 12 líneas y más de 180 estaciones.",
+          "image": "MetroMadrid.svg",
+          "category": "Metro",
+          "rating": 0,
+          "totalReviews": 0
+        }
+      ]
     },
     {
       "id": "zaragoza",
@@ -87,6 +114,15 @@
       "slug": "valencia",
       "flag": "Flag_of_Valencia.svg",
       "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad Valenciana.",
+      "comingSoon": true,
+      "transportes": []
+    },
+    {
+      "id": "basque",
+      "name": "Basque Country",
+      "slug": "basque",
+      "flag": "Flag_of_the_Basque_Country.svg",
+      "description": "Valoraciones de los principales sistemas de transporte público de la Comunidad Autónoma del País Vasco.",
       "comingSoon": true,
       "transportes": []
     }

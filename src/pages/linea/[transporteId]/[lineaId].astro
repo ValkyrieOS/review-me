@@ -1,0 +1,236 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import linesData from "../../../data/lines.json";
+import ratingData from "../../../data/rating.json";
+
+// Importar todas las imágenes de logos disponibles
+const logoImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../assets/logos/*.{svg,png,webp,jpg}",
+  { eager: true }
+);
+
+// Generar rutas estáticas para todas las líneas
+export function getStaticPaths() {
+  const paths: {
+    params: { transporteId: string; lineaId: string };
+    props: any;
+  }[] = [];
+
+  // Iterar sobre cada transporte en linesData
+  Object.entries(linesData).forEach(([transporteId, lines]) => {
+    (lines as any[]).forEach((line) => {
+      // Buscar el transporte en ratingData para obtener su nombre
+      let transporteName = transporteId;
+      let comunidadSlug = "";
+
+      for (const comunidad of ratingData.comunidades) {
+        const transporte = comunidad.transportes.find(
+          (t: any) => t.id === transporteId
+        );
+        if (transporte) {
+          transporteName = transporte.name;
+          comunidadSlug = comunidad.slug;
+          break;
+        }
+      }
+
+      paths.push({
+        params: { transporteId, lineaId: line.id },
+        props: {
+          line,
+          transporteId,
+          transporteName,
+          comunidadSlug,
+        },
+      });
+    });
+  });
+
+  return paths;
+}
+
+// Obtener datos
+const { transporteId, lineaId } = Astro.params;
+const { line, transporteName, comunidadSlug } = Astro.props;
+
+// Cargar imagen de la línea
+const lineImagePath = Object.keys(logoImages).find((path) =>
+  path.includes(line.image)
+);
+const lineImage = lineImagePath ? logoImages[lineImagePath].default : null;
+
+// Generate stars based on rating (0-5)
+const fullStars = Math.floor(line.rating);
+const hasHalfStar = line.rating % 1 >= 0.5;
+const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+---
+
+<Layout title={`${line.name} - ${transporteName} | ReviewMe`}>
+  <section class="py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6">
+      <!-- Breadcrumb -->
+      <nav class="mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm flex-wrap">
+          <li>
+            <a
+              href={import.meta.env.BASE_URL}
+              class="text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              Inicio
+            </a>
+          </li>
+          <li class="text-neutral-600">/</li>
+          <li>
+            <a
+              href={`${import.meta.env.BASE_URL}/comunidad/${comunidadSlug}`}
+              class="text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              {comunidadSlug.charAt(0).toUpperCase() + comunidadSlug.slice(1)}
+            </a>
+          </li>
+          <li class="text-neutral-600">/</li>
+          <li class="text-neutral-300">{line.name}</li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-12">
+        <div class="flex items-start gap-6">
+          <!-- Line Logo -->
+          {
+            lineImage ? (
+              <div class="shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-white flex items-center justify-center p-2 shadow-lg">
+                <Image
+                  src={lineImage}
+                  alt={`Logo de ${line.name}`}
+                  class="w-full h-full object-contain"
+                  width={96}
+                  height={96}
+                />
+              </div>
+            ) : (
+              <div class="shrink-0 w-24 h-24 rounded-xl bg-neutral-800 flex items-center justify-center">
+                <span class="text-3xl font-bold text-neutral-300">
+                  {line.name}
+                </span>
+              </div>
+            )
+          }
+
+          <div>
+            <h1
+              class="text-3xl md:text-4xl font-bold tracking-tight text-neutral-50"
+            >
+              Línea {line.name}
+            </h1>
+            <p class="mt-1 text-lg text-neutral-400">
+              {transporteName}
+            </p>
+            {line.route && <p class="mt-2 text-neutral-500">📍 {line.route}</p>}
+          </div>
+        </div>
+
+        <!-- Rating Stats -->
+        <div
+          class="mt-8 p-6 rounded-xl bg-neutral-900/50 border border-neutral-800"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-4">
+              <span class="text-4xl font-bold text-neutral-100">
+                {line.rating.toFixed(1)}
+              </span>
+              <div>
+                <div class="flex gap-0.5">
+                  {
+                    Array(fullStars)
+                      .fill(null)
+                      .map(() => (
+                        <svg
+                          class="w-5 h-5 text-yellow-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))
+                  }
+                  {
+                    hasHalfStar && (
+                      <svg
+                        class="w-5 h-5 text-yellow-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <defs>
+                          <linearGradient id="halfGradientLine">
+                            <stop offset="50%" stop-color="currentColor" />
+                            <stop offset="50%" stop-color="#525252" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          fill="url(#halfGradientLine)"
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
+                      </svg>
+                    )
+                  }
+                  {
+                    Array(emptyStars)
+                      .fill(null)
+                      .map(() => (
+                        <svg
+                          class="w-5 h-5 text-neutral-700"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))
+                  }
+                </div>
+                <span class="text-sm text-neutral-500">
+                  {line.totalReviews}
+                  {line.totalReviews === 1 ? "valoración" : "valoraciones"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Placeholder for future content -->
+      <div
+        class="p-8 border border-dashed border-neutral-800 rounded-xl text-center"
+      >
+        <p class="text-neutral-500">
+          Próximamente: comentarios y valoraciones detalladas de esta línea.
+        </p>
+      </div>
+
+      <!-- Back link -->
+      <div class="mt-12 pt-8 border-t border-neutral-800">
+        <a
+          href={`${import.meta.env.BASE_URL}/comunidad/${comunidadSlug}`}
+          class="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Volver a {
+            comunidadSlug.charAt(0).toUpperCase() + comunidadSlug.slice(1)
+          }
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
